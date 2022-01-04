@@ -18,19 +18,34 @@ function App() {
     setSelected(Math.floor(Math.random() * anecdotes.length));
   };
 
-  const voteTo = () => {
+  const handleVote = () => {
     const newVotes = [...votes];
     newVotes[selected] += 1;
 
     setVotes(newVotes);
   };
 
+  const indexOfMax = () => {
+    const index = votes.reduce(
+      //previousValue, currentValue, currentIndex, array
+      (iMax, x, i, arr) => (x > arr[iMax] ? i : iMax),
+      0
+    );
+
+    return index;
+  };
+
   return (
     <>
+      <h2>Anecdote of the day</h2>
       <div>{anecdotes[selected]}</div>
       <div>{`has ${votes[selected]} votes`}</div>
-      <button onClick={voteTo}>vote</button>
+      <button onClick={handleVote}>vote</button>
       <button onClick={showRandomQuote}>next anecdote</button>
+
+      <h2>Anecdote with most votes</h2>
+      <div>{anecdotes[indexOfMax()]}</div>
+      <div>{`has ${votes[indexOfMax()]} votes`}</div>
     </>
   );
 }
