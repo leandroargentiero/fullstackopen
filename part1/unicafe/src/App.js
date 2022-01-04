@@ -22,6 +22,21 @@ function App() {
     }
   };
 
+  const calcAverage = () => {
+    const avgGood = good * 1;
+    const avgNeutral = neutral * 0;
+    const avgBad = bad * -1;
+    const total = good + neutral + bad;
+
+    return (avgGood + avgNeutral + avgBad) / total;
+  };
+
+  const calcPositive = () => {
+    const total = good + neutral + bad;
+
+    return (good / total) * 100;
+  };
+
   return (
     <>
       <h2>Give feedback</h2>
@@ -32,6 +47,9 @@ function App() {
       <p>Good:{good}</p>
       <p>Neutral:{neutral}</p>
       <p>Bad:{bad}</p>
+      <p>All:{good + neutral + bad}</p>
+      <p>Average: {calcAverage()}</p>
+      <p>Positive: {calcPositive()}%</p>
     </>
   );
 }
