@@ -5,7 +5,7 @@ This course is held at the Department of Computer Science at the University of H
 | Part                                                                  | Status |
 | --------------------------------------------------------------------- | ------ |
 | Part 0 - Fundamentals of Web Apps                                     | ✅     |
-| Part 1 - Introduction to React                                        |        |
+| Part 1 - Introduction to React                                        | ✅     |
 | Part 2 - Communicating with server                                    |        |
 | Part 3 - Programming a server with NodeJS and Express                 |        |
 | Part 4 - Testing Express servers, user administration                 |        |
