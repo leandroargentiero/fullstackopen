@@ -7,7 +7,6 @@ import CountryList from './components/CountryList';
 function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState('');
-  const [filteredCountries, setfilteredCountries] = useState([]);
 
   useEffect(() => {
     axios
@@ -18,20 +17,24 @@ function App() {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
+  };
 
-    if (filter) {
-      const regex = new RegExp(filter, 'i');
-      const countriesFilter = countries.filter((country) =>
-        country.name.common.match(regex)
-      );
-      setfilteredCountries(countriesFilter);
-    }
+  const filteredCountries = countries.filter((country) =>
+    country.name.common.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const showCountry = (country) => {
+    setFilter(country);
   };
 
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
-      <CountryList filter={filter} filteredCountries={filteredCountries} />
+      <CountryList
+        filter={filter}
+        filteredCountries={filteredCountries}
+        showCountry={showCountry}
+      />
     </div>
   );
 }
