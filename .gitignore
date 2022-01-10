@@ -54,3 +54,5 @@ lerna-debug.log*
 
 storybook-static
 *.sqlite
+
+/part2/part2-notes
