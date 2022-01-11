@@ -1,9 +1,10 @@
-const Persons = ({ persons, filterName }) => {
+const Persons = ({ persons, filterName, handleRemoveClick }) => {
   return persons
     .filter((person) => person.name.match(new RegExp(filterName, 'i')))
     .map((person) => (
       <p key={person.name}>
         {person.name} {person.number}
+        <button onClick={() => handleRemoveClick(person.id)}>remove</button>
       </p>
     ));
 };

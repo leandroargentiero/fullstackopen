@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Filter from './Filter';
-import PersonForm from './PersonForm';
-import Persons from './Persons';
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+
+import personsService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,10 +12,10 @@ const App = () => {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(response.data))
-      .catch((error) => console.log(error));
+    personsService
+      .getAll()
+      .then((allPersons) => setPersons(allPersons))
+      .catch((error) => console.log('Failed DB connection'));
   }, []);
 
   const personAlreadyAdded = (newPerson) => {
@@ -32,9 +33,25 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook`);
     }
 
-    setPersons(persons.concat(personObject));
-    setNewName('');
-    setNewNumber('');
+    personsService
+      .create(personObject)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const removePerson = (id) => {
+    const person = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService.remove(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+        setFilterName('');
+      });
+    }
   };
 
   const handleNameChange = (event) => {
@@ -52,7 +69,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter handleFilterName={handleFilterName} />
+      <Filter handleFilterName={handleFilterName} filterName={filterName} />
       <h2>Add a new</h2>
       <PersonForm
         addPerson={addPerson}
@@ -62,7 +79,11 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={filterName} />
+      <Persons
+        persons={persons}
+        filterName={filterName}
+        handleRemoveClick={removePerson}
+      />
     </div>
   );
 };
