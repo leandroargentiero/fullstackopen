@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "222",
       "id": 1
     },
     {
@@ -11,9 +11,9 @@
       "id": 2
     },
     {
+      "id": 3,
       "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
+      "number": "222"
     },
     {
       "name": "Mary Poppendieck",
