@@ -11,7 +11,10 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notification, setNotification] = useState({
+    message: '',
+    state: '',
+  });
 
   useEffect(() => {
     personsService
@@ -40,7 +43,17 @@ const App = () => {
         setNewNumber('');
       })
       .catch((error) => {
-        console.log(error);
+        setNotification({
+          ...notification,
+          message: `Information of ${person.name} has already been removed.`,
+          state: 'error',
+        });
+        setTimeout(() => {
+          setNotification({ ...notification, message: null });
+        }, 5000);
+        setNewName('');
+        setNewNumber('');
+        setPersons(persons.filter((p) => p.id !== person.id));
       });
   };
 
@@ -64,9 +77,13 @@ const App = () => {
         .create(personObject)
         .then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
-          setNotificationMessage(`Added ${personObject.name}`);
+          setNotification({
+            ...notification,
+            message: `Added ${personObject.name}`,
+            state: 'success',
+          });
           setTimeout(() => {
-            setNotificationMessage(null);
+            setNotification({ ...notification, message: null });
           }, 5000);
           setNewName('');
           setNewNumber('');
@@ -101,7 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {notificationMessage && <Notification message={notificationMessage} />}
+      {notification.message && <Notification notification={notification} />}
       <Filter handleFilterName={handleFilterName} filterName={filterName} />
       <h2>Add a new</h2>
       <PersonForm
