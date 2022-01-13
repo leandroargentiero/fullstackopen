@@ -34,6 +34,18 @@ app.get('/api/persons', (request, response) => {
   response.send(persons);
 });
 
+// GET info
+app.get('/info', (request, response) => {
+  const currentDate = new Date();
+  const totalPersons = persons.length;
+  const html = `
+    <p>Phonebook has info for ${totalPersons} persons.</p>
+    <p>${currentDate}</p>
+  `;
+
+  response.send(html);
+});
+
 // SERVER DESIGNATION
 const PORT = 3001;
 app.listen(PORT, () => {
