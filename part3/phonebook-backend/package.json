@@ -1,0 +1,20 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "node.js backend for a phonebook app",
+  "main": "index.js",
+  "author": "Leandro Argentiero",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "private": false
+}
