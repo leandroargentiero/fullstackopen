@@ -34,6 +34,18 @@ app.get('/api/persons', (request, response) => {
   response.send(persons);
 });
 
+// GET specific person
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id);
+  const person = persons.find((person) => person.id === id);
+
+  if (person) {
+    response.json(person);
+  } else {
+    response.status(404).end();
+  }
+});
+
 // GET info
 app.get('/info', (request, response) => {
   const currentDate = new Date();
