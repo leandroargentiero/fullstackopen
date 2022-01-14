@@ -34,7 +34,15 @@ const generateId = () => {
 // MIDDLEWARE
 // express json-parser for receiving data
 app.use(express.json());
-app.use(morgan('tiny'));
+
+// create custom token
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body);
+});
+// log every call with custom format
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
 
 // GET root directory
 app.get('/', (request, response) => {
