@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
 
 let persons = [
@@ -29,8 +31,10 @@ const generateId = () => {
   return maxId + 1;
 };
 
+// MIDDLEWARE
 // express json-parser for receiving data
 app.use(express.json());
+app.use(morgan('tiny'));
 
 // GET root directory
 app.get('/', (request, response) => {
