@@ -58,10 +58,18 @@ app.get('/api/persons/:id', (request, response) => {
 // uses -> express json-parser for receiving data
 app.post('/api/persons', (request, response) => {
   const body = request.body;
+  const checkName = persons.some((person) => person.name === body.name);
+  const checkNumber = persons.some((person) => person.number === body.number);
 
   if (!body.name) {
     return response.status(400).json({
       error: 'content missing',
+    });
+  }
+
+  if (checkName || checkNumber) {
+    return response.status(400).json({
+      error: 'name must be unique',
     });
   }
 
