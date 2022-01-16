@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
+const static = require('static');
 
 const app = express();
 
@@ -34,6 +36,8 @@ const generateId = () => {
 // MIDDLEWARE
 // express json-parser for receiving data
 app.use(express.json());
+app.use(cors());
+// app.use(static());
 
 // create custom token
 morgan.token('body', (req) => {
