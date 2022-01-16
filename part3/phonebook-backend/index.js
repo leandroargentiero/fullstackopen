@@ -33,32 +33,38 @@ const generateId = () => {
   return maxId + 1;
 };
 
-// MIDDLEWARE
-// express json-parser for receiving data
-app.use(express.json());
-app.use(cors());
-// app.use(static());
+/*
+ *  MIDDLEWARE
+ */
+app.use(express.json()); // express json-parser for receiving data
+app.use(cors()); // allows requests from other origins
+app.use(express.static('build')); // used for serving static files from build folder
 
-// create custom token
+/*
+ *  MORGAN HTTP REQUEST LOGGER
+ */
+// 1. create custom body token
 morgan.token('body', (req) => {
   return JSON.stringify(req.body);
 });
-// log every call with custom format
+// 2. log every call with custom format
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
 
-// GET root directory
+/*
+ *  HTTP RREQUESTS
+ */
+
+// GET - root directory
 app.get('/', (request, response) => {
   response.send('<h1>Phonebook App!</h1>');
 });
-
-// GET all persons
+// GET - all persons
 app.get('/api/persons', (request, response) => {
   response.send(persons);
 });
-
-// GET person
+// GET - person
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   const person = persons.find((person) => person.id === id);
@@ -69,9 +75,19 @@ app.get('/api/persons/:id', (request, response) => {
     response.status(404).end();
   }
 });
+// GET - info
+app.get('/info', (request, response) => {
+  const currentDate = new Date();
+  const totalPersons = persons.length;
+  const html = `
+    <p>Phonebook has info for ${totalPersons} persons.</p>
+    <p>${currentDate}</p>
+  `;
 
-// POST new person
-// uses -> express json-parser for receiving data
+  response.send(html);
+});
+
+// POST - new person (uses -> express json-parser for receiving data)
 app.post('/api/persons', (request, response) => {
   const body = request.body;
   const checkName = persons.some((person) => person.name === body.name);
@@ -99,7 +115,7 @@ app.post('/api/persons', (request, response) => {
   response.json(person);
 });
 
-// DELETE person
+// DELETE - person
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   console.log(id);
@@ -108,19 +124,9 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-// GET info
-app.get('/info', (request, response) => {
-  const currentDate = new Date();
-  const totalPersons = persons.length;
-  const html = `
-    <p>Phonebook has info for ${totalPersons} persons.</p>
-    <p>${currentDate}</p>
-  `;
-
-  response.send(html);
-});
-
-// SERVER DESIGNATION
+/*
+ *  SERVER DESIGNATION
+ */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
