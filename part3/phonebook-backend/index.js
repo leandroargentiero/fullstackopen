@@ -95,8 +95,8 @@ app.get('/info', (request, response) => {
 // POST - new person (uses -> express json-parser for receiving data)
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-  const checkName = persons.some((person) => person.name === body.name);
-  const checkNumber = persons.some((person) => person.number === body.number);
+  // const checkName = persons.some((person) => person.name === body.name);
+  // const checkNumber = persons.some((person) => person.number === body.number);
 
   if (!body.name) {
     return response.status(400).json({
@@ -104,20 +104,21 @@ app.post('/api/persons', (request, response) => {
     });
   }
 
-  if (checkName || checkNumber) {
-    return response.status(400).json({
-      error: 'name must be unique',
-    });
-  }
+  // if (checkName || checkNumber) {
+  //   return response.status(400).json({
+  //     error: 'name must be unique',
+  //   });
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(person);
+  });
 });
 
 // DELETE - person
