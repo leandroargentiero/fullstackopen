@@ -88,7 +88,16 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          setNotification({
+            ...notification,
+            message: error.response.data.error,
+            state: 'error',
+          });
+          setTimeout(() => {
+            setNotification({ ...notification, message: null });
+          }, 5000);
+        });
     }
   };
 
