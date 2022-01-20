@@ -1,12 +1,17 @@
-require('dotenv').config();
 const express = require('express');
-const morgan = require('morgan');
+const app = express();
 const cors = require('cors');
+require('dotenv').config();
+const Person = require('./models/person');
+const morgan = require('morgan');
 const static = require('static');
 
-const app = express();
-
-const Person = require('./models/person');
+/*
+ *  MIDDLEWARE
+ */
+app.use(express.static('build')); // used for serving static files from build folder
+app.use(cors()); // allows requests from other origins
+app.use(express.json()); // express json-parser for receiving data
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
@@ -18,52 +23,15 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-];
-
-const generateId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-  return maxId + 1;
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method);
+  console.log('Path:  ', request.path);
+  console.log('Body:  ', request.body);
+  console.log('---');
+  next();
 };
 
-/*
- *  MIDDLEWARE
- */
-app.use(express.json()); // express json-parser for receiving data
-app.use(cors()); // allows requests from other origins
-app.use(express.static('build')); // used for serving static files from build folder
-
-/*
- *  MORGAN HTTP REQUEST LOGGER
- */
-// 1. create custom body token
-morgan.token('body', (req) => {
-  return JSON.stringify(req.body);
-});
-// 2. log every call with custom format
-app.use(
-  morgan(':method :url :status :res[content-length] - :response-time ms :body')
-);
+app.use(requestLogger);
 
 /*
  *  HTTP RREQUESTS
@@ -73,12 +41,14 @@ app.use(
 app.get('/', (request, response) => {
   response.send('<h1>Phonebook App!</h1>');
 });
+
 // GET - all persons
 app.get('/api/persons', (request, response) => {
   Person.find({}).then((persons) => {
     response.json(persons);
   });
 });
+
 // GET - person
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
@@ -117,7 +87,6 @@ app.post('/api/persons', (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
   });
 
   person
@@ -153,6 +122,12 @@ app.put('/api/persons/:id', (request, response, next) => {
     })
     .catch((error) => next(error));
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
 
 app.use(errorHandler);
 
