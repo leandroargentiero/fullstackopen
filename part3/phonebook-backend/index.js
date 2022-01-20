@@ -8,6 +8,16 @@ const app = express();
 
 const Person = require('./models/person');
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+};
+
 let persons = [
   {
     id: 1,
@@ -70,20 +80,22 @@ app.get('/api/persons', (request, response) => {
   });
 });
 // GET - person
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
+
 // GET - info
 app.get('/info', (request, response) => {
   const currentDate = new Date();
-  const totalPersons = persons.length;
+  const totalPersons = Person.length;
   const html = `
     <p>Phonebook has info for ${totalPersons} persons.</p>
     <p>${currentDate}</p>
@@ -95,8 +107,6 @@ app.get('/info', (request, response) => {
 // POST - new person (uses -> express json-parser for receiving data)
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-  // const checkName = persons.some((person) => person.name === body.name);
-  // const checkNumber = persons.some((person) => person.number === body.number);
 
   if (!body.name) {
     return response.status(400).json({
@@ -104,21 +114,18 @@ app.post('/api/persons', (request, response) => {
     });
   }
 
-  // if (checkName || checkNumber) {
-  //   return response.status(400).json({
-  //     error: 'name must be unique',
-  //   });
-  // }
-
   const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
   });
 
-  person.save().then((savedPerson) => {
-    response.json(person);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
 });
 
 // DELETE - person
@@ -127,7 +134,7 @@ app.delete('/api/persons/:id', (request, response) => {
     .then((result) => {
       response.status(204).end(); // Succesfull response: 'No Content';
     })
-    .catch((error) => response.status(400).end());
+    .catch((error) => next(error));
 });
 
 /*
