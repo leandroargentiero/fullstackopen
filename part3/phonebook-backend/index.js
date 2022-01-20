@@ -123,11 +123,11 @@ app.post('/api/persons', (request, response) => {
 
 // DELETE - person
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  console.log(id);
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
+  Person.findByIdAndDelete(request.params.id)
+    .then((result) => {
+      response.status(204).end(); // Succesfull response: 'No Content';
+    })
+    .catch((error) => response.status(400).end());
 });
 
 /*
