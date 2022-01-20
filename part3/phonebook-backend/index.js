@@ -75,7 +75,7 @@ app.get('/info', (request, response) => {
 });
 
 // POST - new person (uses -> express json-parser for receiving data)
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body;
 
   if (!body.name) {
