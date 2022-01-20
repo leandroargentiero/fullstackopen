@@ -137,10 +137,29 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch((error) => next(error));
 });
 
+// UPDATE - new number
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: body.id,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.use(errorHandler);
+
 /*
  *  SERVER DESIGNATION
  */
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
