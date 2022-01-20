@@ -26,6 +26,8 @@
     "yarn": "^1.22.17"
   },
   "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-plugin-react": "^7.28.0",
     "nodemon": "^2.0.15"
   },
   "private": false
