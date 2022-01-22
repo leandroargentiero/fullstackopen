@@ -4,6 +4,5 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'no-console': 'off',
-    'no-underscore-dangle': 'allow',
   },
 };
