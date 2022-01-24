@@ -58,5 +58,6 @@ storybook-static
 ## Exercise Directories
 /part2/part2-notes
 /part3/part3-backend
+/part3/part3-notes-backend
 
 .env
