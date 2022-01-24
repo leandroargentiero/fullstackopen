@@ -1,9 +1,17 @@
+/* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["returnedObject"] }] */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id", "__v"] }] */
 const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
   author: String,
-  url: String,
+  url: {
+    type: String,
+    required: true,
+  },
   likes: Number,
 });
 

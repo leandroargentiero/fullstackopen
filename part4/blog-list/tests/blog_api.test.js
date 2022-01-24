@@ -51,7 +51,7 @@ test('a valid blog can be added', async () => {
   expect(blogTitles).toContain('A new test blog');
 });
 
-test('verifies if likes property is missing', async () => {
+test('verify if likes property is missing', async () => {
   const blogs = await helper.blogsInDb();
 
   blogs.forEach((blog) => expect(blog.likes).toBeDefined());
@@ -60,4 +60,13 @@ test('verifies if likes property is missing', async () => {
 // Kill DB Connection
 afterAll(() => {
   mongoose.connection.close();
+});
+
+test('verify if backend responds with 400 on missing title and url properties', async () => {
+  const newBlog = {
+    author: 'Leaero',
+    likes: 69,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
 });
