@@ -51,6 +51,12 @@ test('a valid blog can be added', async () => {
   expect(blogTitles).toContain('A new test blog');
 });
 
+test('verifies if likes property is missing', async () => {
+  const blogs = await helper.blogsInDb();
+
+  blogs.forEach((blog) => expect(blog.likes).toBeDefined());
+});
+
 // Kill DB Connection
 afterAll(() => {
   mongoose.connection.close();
