@@ -72,6 +72,13 @@ test('there are six blogs', async () => {
   expect(response.body).toHaveLength(initialBlogs.length);
 });
 
+test('verify if unique identifier is named id', async () => {
+  const blogs = await Blog.find({});
+  const blogsInDB = blogs.map((note) => note.toJSON());
+
+  blogsInDB.forEach((blog) => expect(blog.id).toBeDefined);
+});
+
 // Kill DB Connection
 afterAll(() => {
   mongoose.connection.close();
