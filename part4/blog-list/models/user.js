@@ -1,12 +1,23 @@
 /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["returnedObject"] }] */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id", "__v"] }] */
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    minLength: 3,
+    required: true,
+    unique: true,
+  },
   name: String,
-  passwordHash: String,
+  passwordHash: {
+    type: String,
+    required: true,
+  },
 });
+
+userSchema.plugin(uniqueValidator);
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {

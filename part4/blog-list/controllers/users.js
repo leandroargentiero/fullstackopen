@@ -8,31 +8,49 @@ usersRouter.get('/', async (request, response) => {
   response.json(users);
 });
 
-usersRouter.post('/', async (request, response) => {
+usersRouter.post('/', async (request, response, next) => {
   const { username, name, password } = request.body;
 
-  const existingUser = await User.findOne({ username });
-
-  if (existingUser) {
-    // 400 Bad Request
+  if (password === undefined) {
     return response.status(400).json({
-      error: 'username must be uniqe',
+      error: 'Password is required.',
     });
   }
 
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
+  if (password.length < 3) {
+    return response.status(400).json({
+      error: 'Password must be at least 3 characters long.',
+    });
+  }
 
-  const user = new User({
-    username,
-    name,
-    passwordHash,
-  });
+  // const existingUser = await User.findOne({ username });
 
-  const savedUser = await user.save();
+  // if (existingUser) {
+  //   // 400 Bad Request
+  //   return response.status(400).json({
+  //     error: 'username must be uniqe',
+  //   });
+  // }
 
-  // 201 Created
-  return response.status(201).json(savedUser);
+  try {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const user = new User({
+      username,
+      name,
+      passwordHash,
+    });
+
+    const savedUser = await user.save();
+
+    // 201 Created
+    return response.status(201).json(savedUser);
+  } catch (error) {
+    next(error);
+  }
+
+  return null;
 });
 
 module.exports = usersRouter;
