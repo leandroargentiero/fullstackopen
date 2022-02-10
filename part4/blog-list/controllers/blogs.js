@@ -11,22 +11,24 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response, next) => {
   const { title, author, url, likes } = request.body;
-  const users = await User.find({}).populate('blogs');
+  const users = await User.find({});
+
+  console.log(users);
 
   const blog = new Blog({
     title,
     url,
     likes,
     author,
-    user: {
-      username: users[0].username,
-      name: users[0].name,
-      id: users[0]._id,
-    },
+    user: users[0]._id,
   });
 
   try {
     const savedBlog = await blog.save();
+
+    users[0].blogs = users[0].blogs.concat(savedBlog._id);
+    await users[0].save({ validateModifiedOnly: true });
+
     response.status(201).json(savedBlog);
   } catch (error) {
     next(error);

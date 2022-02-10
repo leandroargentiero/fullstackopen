@@ -3,7 +3,7 @@ const usersRouter = require('express').Router();
 const User = require('../models/user');
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate('blogs');
 
   response.json(users);
 });
@@ -22,15 +22,6 @@ usersRouter.post('/', async (request, response, next) => {
       error: 'Password must be at least 3 characters long.',
     });
   }
-
-  // const existingUser = await User.findOne({ username });
-
-  // if (existingUser) {
-  //   // 400 Bad Request
-  //   return response.status(400).json({
-  //     error: 'username must be uniqe',
-  //   });
-  // }
 
   try {
     const saltRounds = 10;
