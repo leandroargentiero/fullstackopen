@@ -5,26 +5,18 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get('/', async (request, response) => {
   Blog.find({}).then((blogs) => {
     response.json(blogs);
   });
 });
 
+// eslint-disable-next-line consistent-return
 blogsRouter.post('/', async (request, response, next) => {
   const { title, author, url, likes } = request.body;
 
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!request.token || !decodedToken.id) {
     // 401 unauthorized
     return response.status(401).json({ error: 'token missing or invalid' });
   }
