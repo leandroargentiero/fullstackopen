@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlYWVybyIsImlkIjoiNjIwNGRiYTljYzIyMGVmNGU0NzI5NWJiIiwiaWF0IjoxNjQ0NDk1OTExLCJleHAiOjE2NDQ0OTk1MTF9.daIv6IuPtB9oCNeUxL_eV9VGFiATwjNkhJ_j9b4eDhw
 
 {
-  "title": "A second one",
+  "title": "A Tokenized blog",
   "author": "Hazard",
   "likes": "69"
 }
