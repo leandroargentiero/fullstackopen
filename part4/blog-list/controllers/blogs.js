@@ -5,6 +5,15 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
+const verifyToken = (token) => {
+  let validToken = false;
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (token || decodedToken.id) {
+    validToken = true;
+  }
+  return { validToken, decodedToken };
+};
+
 blogsRouter.get('/', async (request, response) => {
   Blog.find({}).then((blogs) => {
     response.json(blogs);
@@ -14,9 +23,9 @@ blogsRouter.get('/', async (request, response) => {
 // eslint-disable-next-line consistent-return
 blogsRouter.post('/', async (request, response, next) => {
   const { title, author, url, likes } = request.body;
+  const { validToken, decodedToken } = verifyToken(request.token);
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!request.token || !decodedToken.id) {
+  if (!validToken) {
     // 401 unauthorized
     return response.status(401).json({ error: 'token missing or invalid' });
   }
@@ -43,7 +52,15 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 });
 
+// eslint-disable-next-line consistent-return
 blogsRouter.delete('/:id', async (request, response, next) => {
+  const { validToken } = verifyToken(request.token);
+
+  if (!validToken) {
+    // 401 unauthorized
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+
   try {
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
