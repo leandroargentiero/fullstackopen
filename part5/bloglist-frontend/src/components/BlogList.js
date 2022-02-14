@@ -13,7 +13,7 @@ const BlogList = ({ username, blogs }) => (
 
 BlogList.propTypes = {
   username: PropTypes.string.isRequired,
-  blogs: PropTypes.arrayOf.isRequired,
+  blogs: PropTypes.arrayOf(PropTypes.any).isRequired,
 };
 
 export default BlogList;
