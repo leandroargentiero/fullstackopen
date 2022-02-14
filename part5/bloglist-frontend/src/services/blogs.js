@@ -7,4 +7,15 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-export default { getAll };
+const addNewBlog = (blog, token) => {
+  const request = axios.post(baseUrl, blog, {
+    headers: {
+      'content-type': 'application/json',
+      authorization: `bearer ${token}`,
+    },
+  });
+
+  return request.then((response) => response.data);
+};
+
+export default { getAll, addNewBlog };

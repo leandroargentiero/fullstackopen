@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AddBlogForm from './components/AddBlogForm';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import blogService from './services/blogs';
@@ -9,6 +10,9 @@ const App = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
   const [user, setUser] = useState(null);
   const localStorageKey = 'loggedInUser';
@@ -56,6 +60,30 @@ const App = () => {
     }
   };
 
+  const handleNewBlog = async (e) => {
+    e.preventDefault();
+
+    try {
+      const storedUserData = window.localStorage.getItem('loggedInUser');
+      const { token } = JSON.parse(storedUserData);
+
+      const newBlogPost = await blogService.addNewBlog(
+        {
+          title,
+          author,
+          url,
+        },
+        token
+      );
+      setBlogs(blogs.concat(newBlogPost));
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    } catch (exception) {
+      throw new Error(`Failed to add new blog: ${exception}`);
+    }
+  };
+
   if (user === null) {
     return (
       <LoginForm
@@ -70,7 +98,22 @@ const App = () => {
   }
 
   return (
-    <BlogList username={user.name} blogs={blogs} handleLogout={handleLogout} />
+    <>
+      <BlogList
+        username={user.name}
+        blogs={blogs}
+        handleLogout={handleLogout}
+      />
+      <AddBlogForm
+        title={title}
+        setTitle={setTitle}
+        author={author}
+        setAuthor={setAuthor}
+        url={url}
+        setUrl={setUrl}
+        handleNewBlog={handleNewBlog}
+      />
+    </>
   );
 };
 
