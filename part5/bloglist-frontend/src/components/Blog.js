@@ -1,8 +1,17 @@
-import React from 'react'
-const Blog = ({blog}) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>  
-)
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default Blog
+function Blog({ blog }) {
+  return (
+    <div>
+      {blog.title} {blog.author}
+    </div>
+  );
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({ title: PropTypes.string, author: PropTypes.string })
+    .isRequired,
+};
+
+export default Blog;
