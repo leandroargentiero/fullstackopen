@@ -11,6 +11,7 @@ const App = () => {
   const [password, setPassword] = useState('');
 
   const [user, setUser] = useState(null);
+  const localStorageKey = 'loggedInUser';
 
   useEffect(() => {
     blogService.getAll().then((allBlogs) => setBlogs(allBlogs));
@@ -35,27 +36,42 @@ const App = () => {
       });
 
       setUser(loggedInUser);
-      window.localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+      window.localStorage.setItem(
+        localStorageKey,
+        JSON.stringify(loggedInUser)
+      );
       setUsername('');
       setPassword('');
     } catch (exception) {
-      console.log(exception);
+      throw new Error(`Failed to login: ${exception}`);
+    }
+  };
+
+  const handleLogout = () => {
+    try {
+      window.localStorage.removeItem(localStorageKey);
+      setUser(null);
+    } catch (exception) {
+      throw new Error(`Failed to logout: ${exception}`);
     }
   };
 
   if (user === null) {
     return (
       <LoginForm
-        handleLogin={handleLogin}
         username={username}
         setUsername={setUsername}
         password={password}
         setPassword={setPassword}
+        setUser={setUser}
+        handleLogin={handleLogin}
       />
     );
   }
 
-  return <BlogList username={user.name} blogs={blogs} />;
+  return (
+    <BlogList username={user.name} blogs={blogs} handleLogout={handleLogout} />
+  );
 };
 
 export default App;
