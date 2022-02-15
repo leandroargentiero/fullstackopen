@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import AddBlogForm from './components/AddBlogForm';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -13,6 +14,10 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [notification, setNotification] = useState({
+    message: null,
+    state: '',
+  });
 
   const [user, setUser] = useState(null);
   const localStorageKey = 'loggedInUser';
@@ -29,6 +34,17 @@ const App = () => {
       setUser(parsedUser);
     }
   }, []);
+
+  const showNotification = (message, state) => {
+    setNotification({
+      ...notification,
+      message,
+      state,
+    });
+    setTimeout(() => {
+      setNotification({ ...notification, message: null });
+    }, 5000);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -47,7 +63,7 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      throw new Error(`Failed to login: ${exception}`);
+      showNotification('wrong username or password', 'error');
     }
   };
 
@@ -76,29 +92,44 @@ const App = () => {
         token
       );
       setBlogs(blogs.concat(newBlogPost));
+      showNotification(`A new blog ${title} by ${author} added.`, 'success');
       setTitle('');
       setAuthor('');
       setUrl('');
     } catch (exception) {
-      throw new Error(`Failed to add new blog: ${exception}`);
+      showNotification('Failed to add new blog post');
     }
   };
 
   if (user === null) {
     return (
-      <LoginForm
-        username={username}
-        setUsername={setUsername}
-        password={password}
-        setPassword={setPassword}
-        setUser={setUser}
-        handleLogin={handleLogin}
-      />
+      <>
+        {notification.message !== null && (
+          <Notification
+            message={notification.message}
+            state={notification.state}
+          />
+        )}
+        <LoginForm
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          setUser={setUser}
+          handleLogin={handleLogin}
+        />
+      </>
     );
   }
 
   return (
     <>
+      {notification.message !== null && (
+        <Notification
+          message={notification.message}
+          state={notification.state}
+        />
+      )}
       <BlogList
         username={user.name}
         blogs={blogs}
