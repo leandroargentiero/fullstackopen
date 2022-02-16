@@ -12,9 +12,6 @@ const App = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [notification, setNotification] = useState({
     message: null,
     state: '',
@@ -77,27 +74,18 @@ const App = () => {
     }
   };
 
-  const addNewBlog = async (e) => {
-    e.preventDefault();
-
+  const addNewBlog = async (newBlogObject) => {
     try {
       const storedUserData = window.localStorage.getItem('loggedInUser');
       const { token } = JSON.parse(storedUserData);
 
-      const newBlogPost = await blogService.addNewBlog(
-        {
-          title,
-          author,
-          url,
-        },
-        token
-      );
+      const newBlogPost = await blogService.addNewBlog(newBlogObject, token);
       setBlogs(blogs.concat(newBlogPost));
-      showNotification(`A new blog ${title} by ${author} added.`, 'success');
+      showNotification(
+        `A new blog ${newBlogPost.title} by ${newBlogPost.author} added.`,
+        'success'
+      );
       blogFormRef.current.toggleVisibility();
-      setTitle('');
-      setAuthor('');
-      setUrl('');
     } catch (exception) {
       showNotification('Failed to add new blog post');
     }
@@ -140,15 +128,7 @@ const App = () => {
         </button>
       </p>
       <Togglable buttonLabel="new note" ref={blogFormRef}>
-        <AddBlogForm
-          title={title}
-          setTitle={setTitle}
-          author={author}
-          setAuthor={setAuthor}
-          url={url}
-          setUrl={setUrl}
-          onSubmit={addNewBlog}
-        />
+        <AddBlogForm addNewBlog={addNewBlog} />
       </Togglable>
       <BlogList blogs={blogs} />
     </>
