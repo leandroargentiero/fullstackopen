@@ -24,6 +24,22 @@ const addNewBlog = async (blog, token) => {
   return null;
 };
 
+const removeBlog = async (blogId, token) => {
+  try {
+    const request = await axios.delete(`${baseUrl}/${blogId}`, {
+      headers: {
+        authorization: `bearer ${token}`,
+      },
+    });
+
+    return request;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return null;
+};
+
 const addNewLike = async (blog, token) => {
   try {
     const request = await axios.put(`${baseUrl}/${blog.id}`, blog, {
@@ -41,4 +57,4 @@ const addNewLike = async (blog, token) => {
   return null;
 };
 
-export default { getAll, addNewBlog, addNewLike };
+export default { getAll, addNewBlog, removeBlog, addNewLike };

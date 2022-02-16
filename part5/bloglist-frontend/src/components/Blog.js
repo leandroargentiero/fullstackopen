@@ -10,7 +10,7 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, removeBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
 
@@ -51,6 +51,9 @@ const Blog = ({ blog }) => {
             like
           </button>
         </div>
+        <button type="button" onClick={() => removeBlog(blog.id)}>
+          remove
+        </button>
       </div>
     </div>
   );
@@ -58,11 +61,13 @@ const Blog = ({ blog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.shape({
+    id: PropTypes.string,
     title: PropTypes.string,
     author: PropTypes.string,
     url: PropTypes.string,
     likes: PropTypes.number,
   }).isRequired,
+  removeBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;
