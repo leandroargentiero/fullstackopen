@@ -7,15 +7,38 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-const addNewBlog = (blog, token) => {
-  const request = axios.post(baseUrl, blog, {
-    headers: {
-      'content-type': 'application/json',
-      authorization: `bearer ${token}`,
-    },
-  });
+const addNewBlog = async (blog, token) => {
+  try {
+    const request = await axios.post(baseUrl, blog, {
+      headers: {
+        'content-type': 'application/json',
+        authorization: `bearer ${token}`,
+      },
+    });
 
-  return request.then((response) => response.data);
+    return request.data;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return null;
 };
 
-export default { getAll, addNewBlog };
+const addNewLike = async (blog, token) => {
+  try {
+    const request = await axios.put(`${baseUrl}/${blog.id}`, blog, {
+      headers: {
+        'content-type': 'application/json',
+        authorization: `bearer ${token}`,
+      },
+    });
+
+    return request.data;
+  } catch (err) {
+    console.log(err);
+  }
+
+  return null;
+};
+
+export default { getAll, addNewBlog, addNewLike };
