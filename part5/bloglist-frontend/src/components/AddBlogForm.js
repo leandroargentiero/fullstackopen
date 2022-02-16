@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 const AddBlogForm = ({
-  handleNewBlog,
+  onSubmit,
   title,
   setTitle,
   author,
@@ -12,7 +12,7 @@ const AddBlogForm = ({
   return (
     <div>
       <h2>Create new</h2>
-      <form onSubmit={handleNewBlog}>
+      <form onSubmit={onSubmit}>
         <div>
           <label htmlFor="title">
             title
@@ -56,7 +56,7 @@ const AddBlogForm = ({
 };
 
 AddBlogForm.propTypes = {
-  handleNewBlog: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   setTitle: PropTypes.func.isRequired,
   author: PropTypes.string.isRequired,

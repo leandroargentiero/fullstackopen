@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AddBlogForm from './components/AddBlogForm';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -18,8 +19,8 @@ const App = () => {
     message: null,
     state: '',
   });
-
   const [user, setUser] = useState(null);
+  const blogFormRef = useRef();
   const localStorageKey = 'loggedInUser';
 
   useEffect(() => {
@@ -76,7 +77,7 @@ const App = () => {
     }
   };
 
-  const handleNewBlog = async (e) => {
+  const addNewBlog = async (e) => {
     e.preventDefault();
 
     try {
@@ -93,6 +94,7 @@ const App = () => {
       );
       setBlogs(blogs.concat(newBlogPost));
       showNotification(`A new blog ${title} by ${author} added.`, 'success');
+      blogFormRef.current.toggleVisibility();
       setTitle('');
       setAuthor('');
       setUrl('');
@@ -130,20 +132,25 @@ const App = () => {
           state={notification.state}
         />
       )}
-      <BlogList
-        username={user.name}
-        blogs={blogs}
-        handleLogout={handleLogout}
-      />
-      <AddBlogForm
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        url={url}
-        setUrl={setUrl}
-        handleNewBlog={handleNewBlog}
-      />
+      <h2>blogs</h2>
+      <p>
+        {`${user.name} logged in `}
+        <button type="button" onClick={handleLogout}>
+          logout
+        </button>
+      </p>
+      <Togglable buttonLabel="new note" ref={blogFormRef}>
+        <AddBlogForm
+          title={title}
+          setTitle={setTitle}
+          author={author}
+          setAuthor={setAuthor}
+          url={url}
+          setUrl={setUrl}
+          onSubmit={addNewBlog}
+        />
+      </Togglable>
+      <BlogList blogs={blogs} />
     </>
   );
 };
