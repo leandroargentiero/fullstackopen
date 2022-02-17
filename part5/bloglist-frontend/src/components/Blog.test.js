@@ -3,15 +3,17 @@ import { render, screen } from '@testing-library/react';
 import Blog from './Blog';
 
 describe('<Blog />', () => {
-  const blog = {
-    title: 'Testing the blog title field',
-    author: 'Testing the blog author field',
-  };
-
-  beforeEach(() => render(<Blog blog={blog} />).container);
-
   test('renders title and author', () => {
-    screen.findAllByText('Testing the blog title field');
-    screen.findAllByText('Testing the blog author field');
+    const blog = {
+      title: 'Testing the blog title field',
+      author: 'Testing the blog author field',
+    };
+
+    render(<Blog blog={blog} removeBlog={() => {}} />);
+
+    const title = screen.getByText('Testing the blog title field');
+    const author = screen.getByText('Testing the blog author field');
+    expect(title).toBeDefined();
+    expect(author).toBeDefined();
   });
 });
