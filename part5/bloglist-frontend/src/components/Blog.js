@@ -36,15 +36,19 @@ const Blog = ({ blog, removeBlog }) => {
   };
 
   return (
-    <div style={blogStyle} className="blog-item">
+    <div style={blogStyle}>
       <div>
         <span>{blog.title}</span>
         <span>{blog.author}</span>
-        <button type="button" onClick={toggleVisibility}>
+        <button
+          type="button"
+          onClick={toggleVisibility}
+          className="btn-show-more"
+        >
           {detailsVisible ? 'hide' : 'show'}
         </button>
       </div>
-      <div style={detailsVisibility}>
+      <div style={detailsVisibility} className="blog-detail">
         <div>{blog.url}</div>
         <div>
           likes {likes}{' '}
