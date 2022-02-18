@@ -50,5 +50,25 @@ describe('Blog app', function () {
       cy.contains('add blog').click();
       cy.contains('a blog created by cypress');
     });
+
+    describe.only('and when a blog exists', function () {
+      beforeEach(function () {
+        cy.createNote({
+          title: 'another blog created by cypress',
+          author: 'cypress',
+          url: 'https://www.cypress.io/',
+        });
+      });
+
+      it('User can like a blog', function () {
+        cy.contains('another blog created by cypress')
+          .parent()
+          .contains('show')
+          .click();
+        cy.contains('like').as('likeButton');
+        cy.get('@likeButton').click();
+        cy.get('@likeButton').parent().should('contain', 'likes 1');
+      });
+    });
   });
 });

@@ -13,6 +13,7 @@ const AddBlogForm = ({ addNewBlog }) => {
       title,
       author,
       url,
+      likes: 0,
     };
 
     addNewBlog(newBlog);

@@ -7,3 +7,18 @@ Cypress.Commands.add('login', ({ username, password }) => {
     cy.visit('http://localhost:3000');
   });
 });
+
+Cypress.Commands.add('createNote', ({ title, author, url }) => {
+  cy.request({
+    url: 'http://localhost:3003/api/blogs',
+    method: 'POST',
+    body: { title, author, url, likes: 0 },
+    headers: {
+      Authorization: `bearer ${
+        JSON.parse(localStorage.getItem('loggedInUser')).token
+      }`,
+    },
+  });
+
+  cy.visit('http://localhost:3000');
+});
