@@ -25,7 +25,7 @@ describe('Blog app', function () {
       cy.contains('Leandro Argentiero logged in');
     });
 
-    it.only('fails with wrong credentials', function () {
+    it('fails with wrong credentials', function () {
       cy.get('#username').type('leaero');
       cy.get('#password').type('wrong');
       cy.get('#btn-login').click();
@@ -34,6 +34,21 @@ describe('Blog app', function () {
         .should('have.class', 'error')
         .and('have.css', 'color', 'rgb(255, 0, 0)')
         .and('have.css', 'border-style', 'solid');
+    });
+  });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'leaero', password: 'antwerpen' });
+    });
+
+    it('A blog can be created', function () {
+      cy.contains('new blog').click();
+      cy.get('#title').type('a blog created by cypress');
+      cy.get('#author').type('cypress');
+      cy.get('#url').type('https://www.cypress.io/');
+      cy.contains('add blog').click();
+      cy.contains('a blog created by cypress');
     });
   });
 });
