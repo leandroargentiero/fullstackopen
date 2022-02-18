@@ -28,4 +28,12 @@ describe('<Blog />', () => {
     const div = container.querySelector('.blog-detail');
     expect(div).toHaveStyle('display: block');
   });
+
+  test('ensure like button is clicked twice', () => {
+    const button = screen.getByText('like');
+
+    userEvent.click(button);
+
+    screen.debug(button);
+  });
 });
