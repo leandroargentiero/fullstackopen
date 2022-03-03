@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import AnnecdoteForm from "./components/AnnecdoteForm";
 import { addVote, newAnnecdote } from "./reducers/anecdoteReducer";
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
     <div>
       <h2>Anecdotes</h2>
       {anecdotes
+        .sort((a1, a2) => a2.votes - a1.votes)
         .map((anecdote) => (
           <div key={anecdote.id}>
             <div>{anecdote.content}</div>
@@ -31,16 +33,8 @@ const App = () => {
               <button onClick={() => vote(anecdote.id)}>vote</button>
             </div>
           </div>
-        ))
-        .sort((a1, a2) => a1.votes - a2.votes)
-        .reverse()}
-      <h2>create new</h2>
-      <form onSubmit={addAnecdote}>
-        <div>
-          <input name="annecdote" />
-        </div>
-        <button>create</button>
-      </form>
+        ))}
+      <AnnecdoteForm addAnecdote={addAnecdote} />
     </div>
   );
 };
