@@ -59,5 +59,6 @@ storybook-static
 /tutorial/notes-frontend
 /tutorial/notes-backend
 /tutorial/redux
+/tutorial/redux-notes
 
 .env
