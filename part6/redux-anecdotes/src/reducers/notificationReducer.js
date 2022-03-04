@@ -1,15 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  message: "",
+  visible: false,
+};
+
 const notificationSlice = createSlice({
   name: "notification",
-  initialState: "",
+  initialState,
   reducers: {
-    addNotification(state, action) {
-      const message = action.payload;
-      return (state = `Anecdote ${message} was added.`);
+    anecdoteNotification(state, action) {
+      const anecdote = action.payload;
+      return (state = {
+        message: `Anecdote '${anecdote}' was added.`,
+        visible: true,
+      });
+    },
+    voteNotification(state, action) {
+      const content = action.payload;
+      return (state = {
+        message: `you voted '${content}'`,
+        visible: true,
+      });
+    },
+    toggleVisibility(state, action) {
+      return (state = {
+        ...state,
+        visible: !state.visible,
+      });
     },
   },
 });
 
-export const { addNotification } = notificationSlice.actions;
+export const { anecdoteNotification, voteNotification, toggleVisibility } =
+  notificationSlice.actions;
 export default notificationSlice.reducer;

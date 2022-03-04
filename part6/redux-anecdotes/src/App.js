@@ -2,16 +2,23 @@ import { useSelector, useDispatch } from "react-redux";
 import AnnecdoteForm from "./components/AnnecdoteForm";
 import Notification from "./components/Notification";
 import { addVote, newAnecdote } from "./reducers/anecdoteReducer";
-import { addNotification } from "./reducers/notificationReducer";
+import {
+  anecdoteNotification,
+  voteNotification,
+} from "./reducers/notificationReducer";
 
 const App = () => {
   const dispatch = useDispatch();
   const anecdotes = useSelector(({ anecdotes }) => anecdotes);
+  const showNotification = useSelector(
+    ({ notification }) => notification.visible
+  );
 
-  const vote = (id) => {
+  const vote = ({ id, content }) => {
     console.log("vote", id);
     if (id) {
       dispatch(addVote(id));
+      dispatch(voteNotification(content));
     }
   };
 
@@ -20,12 +27,12 @@ const App = () => {
     const content = e.target.annecdote.value;
     e.target.annecdote.value = "";
     dispatch(newAnecdote(content));
-    dispatch(addNotification(content));
+    dispatch(anecdoteNotification(content));
   };
 
   return (
     <div>
-      <Notification />
+      {showNotification && <Notification />}
       <h2>Anecdotes</h2>
       {[...anecdotes]
         .sort((a1, a2) => a2.votes - a1.votes)
@@ -34,7 +41,7 @@ const App = () => {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
+              <button onClick={() => vote(anecdote)}>vote</button>
             </div>
           </div>
         ))}

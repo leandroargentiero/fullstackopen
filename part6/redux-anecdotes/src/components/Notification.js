@@ -1,7 +1,18 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleVisibility } from "../reducers/notificationReducer";
 
 const Notification = () => {
-  const notification = useSelector(({ notification }) => notification);
+  const dispatch = useDispatch();
+  const message = useSelector(({ notification }) => notification.message);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      dispatch(toggleVisibility());
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   const style = {
     border: "solid",
@@ -9,7 +20,7 @@ const Notification = () => {
     borderWidth: 1,
   };
 
-  return <div style={style}>{notification}</div>;
+  return <div style={style}>{message}</div>;
 };
 
 export default Notification;
