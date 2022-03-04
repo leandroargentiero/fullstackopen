@@ -11,4 +11,13 @@ const getAll = async () => {
   }
 };
 
-export default { getAll };
+const addNewAnecdote = async (data) => {
+  try {
+    const result = await axios.post(baseUrl, data);
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export default { getAll, addNewAnecdote };
