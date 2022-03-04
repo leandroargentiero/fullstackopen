@@ -1,6 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import AnnecdoteForm from "./components/AnnecdoteForm";
+import Notification from "./components/Notification";
 import { addVote, newAnecdote } from "./reducers/anecdoteReducer";
+import { addNotification } from "./reducers/notificationReducer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -18,10 +20,12 @@ const App = () => {
     const content = e.target.annecdote.value;
     e.target.annecdote.value = "";
     dispatch(newAnecdote(content));
+    dispatch(addNotification(content));
   };
 
   return (
     <div>
+      <Notification />
       <h2>Anecdotes</h2>
       {[...anecdotes]
         .sort((a1, a2) => a2.votes - a1.votes)
