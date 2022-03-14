@@ -14,7 +14,7 @@ const getAll = async () => {
 const addNewAnecdote = async (data) => {
   try {
     const result = await axios.post(baseUrl, data);
-    return result;
+    return result.data;
   } catch (e) {
     console.log(e);
   }

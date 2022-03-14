@@ -4,8 +4,8 @@ import AnnecdoteForm from "./components/AnnecdoteForm";
 import Notification from "./components/Notification";
 import {
   addVote,
-  newAnecdote,
   initaliazeAnecdotes,
+  createNewAnecdote,
 } from "./reducers/anecdoteReducer";
 import {
   anecdoteNotification,
@@ -35,7 +35,7 @@ const App = () => {
     e.preventDefault();
     const content = e.target.annecdote.value;
     e.target.annecdote.value = "";
-    dispatch(newAnecdote(content));
+    dispatch(createNewAnecdote(content));
     dispatch(anecdoteNotification(content));
   };
 
