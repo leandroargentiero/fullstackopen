@@ -6,6 +6,7 @@ import {
   addVote,
   initaliazeAnecdotes,
   createNewAnecdote,
+  addNewVote,
 } from "./reducers/anecdoteReducer";
 import {
   anecdoteNotification,
@@ -23,11 +24,10 @@ const App = () => {
     dispatch(initaliazeAnecdotes());
   }, [dispatch]);
 
-  const vote = ({ id, content }) => {
-    console.log("vote", id);
-    if (id) {
-      dispatch(addVote(id));
-      dispatch(voteNotification(content));
+  const vote = (annecdote) => {
+    if (annecdote.id) {
+      dispatch(addNewVote(annecdote));
+      dispatch(voteNotification(annecdote.content));
     }
   };
 

@@ -20,4 +20,13 @@ const addNewAnecdote = async (data) => {
   }
 };
 
-export default { getAll, addNewAnecdote };
+const updateAnecdote = async (id, data) => {
+  try {
+    const result = await axios.put(`${baseUrl}/${id}`, data);
+    return result.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export default { getAll, addNewAnecdote, updateAnecdote };
