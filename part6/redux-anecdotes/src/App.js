@@ -2,12 +2,15 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AnnecdoteForm from "./components/AnnecdoteForm";
 import Notification from "./components/Notification";
-import { addVote, newAnecdote, setAnecdotes } from "./reducers/anecdoteReducer";
+import {
+  addVote,
+  newAnecdote,
+  initaliazeAnecdotes,
+} from "./reducers/anecdoteReducer";
 import {
   anecdoteNotification,
   voteNotification,
 } from "./reducers/notificationReducer";
-import anecdoteService from "./services/anecdotes";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -17,9 +20,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    anecdoteService
-      .getAll()
-      .then((anecdotes) => dispatch(setAnecdotes(anecdotes)));
+    dispatch(initaliazeAnecdotes());
   }, [dispatch]);
 
   const vote = ({ id, content }) => {
